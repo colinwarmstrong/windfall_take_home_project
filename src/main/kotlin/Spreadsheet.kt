@@ -10,15 +10,14 @@ fun main() {
 }
 
 class Cell {
-    private val values = ArrayList<Float>()
+    private var runningTotal = 0.00f
 
-    fun addValue(value: Float) {
-        values.add(value)
+    fun addValueToTotal(value: Float) {
+        runningTotal += value
     }
 
-    fun formattedValue(): String {
-        val sum = values.sum()
-        return String.format("%.2f", sum)
+    fun getFormattedTotal(): String {
+        return String.format("%.2f", runningTotal)
     }
 }
 
@@ -37,7 +36,7 @@ class Spreadsheet {
         }
 
         csvCells.forEach { row ->
-            val s = row.joinToString(separator = ",") { cell -> cell.formattedValue() }
+            val s = row.joinToString(separator = ",") { cell -> cell.getFormattedTotal() }
             println(s)
         }
     }
@@ -61,9 +60,9 @@ class Spreadsheet {
             val newValue = values.removeFirst().toFloat()
 
             if (char == '+') {
-                newCell.addValue(newValue)
+                newCell.addValueToTotal(newValue)
             } else {
-                newCell.addValue(newValue * -1)
+                newCell.addValueToTotal(newValue * -1)
             }
             i++
         }
