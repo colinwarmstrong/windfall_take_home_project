@@ -11,8 +11,7 @@ class Cell(val text: String) {
     var totalHasBeenCalculated: Boolean = false
 
     fun addValueToTotal(value: Float) {
-        if (this.totalHasBeenCalculated) return
-        else runningTotal += value
+        runningTotal += value
     }
 
     fun getFormattedTotal(): String {
@@ -75,45 +74,55 @@ class Spreadsheet {
     }
 
     private fun calculateCellTotal(cell: Cell): Float {
-        val values = cell.text.split("+", "-").toMutableList()
+        // If we've already calculated this cell's total, just return the total
+        if (cell.totalHasBeenCalculated) return cell.runningTotal
 
-        /* Unless our cell text starts with a '-' character, add an implicit '+' character to
-           the start of our cell text to make conditional logic more straightforward */
-        var normalizedCellText = cell.text
-        if (cell.text[0] != '-') normalizedCellText = "+${cell.text}"
+        // Splitting our cell text on + and - operators gets us the terms we care about (numbers and cell references)
+        val terms = cell.text.split("+", "-").toMutableList()
 
-        var i = 0
-        while (i < normalizedCellText.length) {
-            val char = normalizedCellText[i]
-            if (char != '-' && char != '+') {
-                i++
-                continue
-            }
+        val normalizedCellText = getNormalizedCellText(cell.text)
 
-            var newValue: Float
+        // Iterate over each character in our normalized cell text and perform calculation logic when
+        // we reach a + or - operator
+        for (char in normalizedCellText) {
+            if (char != '+' && char != '-') continue
 
-            if (values.first()[0].isLetter()) {
-                val referencedCell = cellReferenceMap[values.first()] ?: throw Exception("Invalid cell referenced")
-                newValue = if (referencedCell.totalHasBeenCalculated) {
-                    referencedCell.runningTotal
-                } else {
-                    calculateCellTotal(referencedCell)
-                }
-                values.removeFirst()
-            } else {
-                newValue = values.removeFirst().toFloat()
-            }
+            // Each time we reach a +/- operator, remove the first term from our list
+            val currentTerm = terms.removeFirst()
+            // Recursively calculate the value for this term
+            val termValue = calculateValueForTerm(currentTerm)
 
+            // Add or subtract term value to cell total based on +/- operator
             if (char == '+') {
-                cell.addValueToTotal(newValue)
+                cell.addValueToTotal(termValue)
             } else {
-                cell.addValueToTotal(newValue * -1)
+                cell.addValueToTotal(termValue * -1)
             }
-            i++
         }
 
         cell.setTotalHasBeenCalculatedToTrue()
         return cell.runningTotal
+    }
+
+    // Unless the cell text starts with a '-', add an implicit '+' to the front to make conditional
+    // logic more straightforward
+    private fun getNormalizedCellText(cellText: String): String {
+        return if (cellText[0] == '-') {
+            cellText
+        } else {
+            "+${cellText}"
+        }
+    }
+
+    // If our term starts with a letter, it's a cell reference. This means we need to get the referenced cell
+    // and recursively calculate its total. Otherwise, we just have a number and can return it as a float
+    private fun calculateValueForTerm(term: String): Float {
+        return if (term[0].isLetter()) {
+            val referencedCell = cellReferenceMap[term] ?: throw Exception("Invalid cell referenced")
+            calculateCellTotal(referencedCell)
+        } else {
+            term.toFloat()
+        }
     }
 
     /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
