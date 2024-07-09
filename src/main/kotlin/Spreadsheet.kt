@@ -3,34 +3,16 @@ package colin.armstrong
 import java.io.File
 
 fun main() {
-    Spreadsheet().main()
-}
-
-class Cell(val text: String) {
-    var runningTotal = 0.00f
-    var totalHasBeenCalculated: Boolean = false
-
-    fun addValueToTotal(value: Float) {
-        runningTotal += value
-    }
-
-    fun getFormattedTotal(): String {
-        return String.format("%.2f", runningTotal)
-    }
-
-    fun setTotalHasBeenCalculatedToTrue() {
-        this.totalHasBeenCalculated = true
-    }
+    val filepath = "src/main/resources/example.csv"
+    val csvFile = File(filepath)
+    Spreadsheet().main(csvFile)
 }
 
 class Spreadsheet {
     private val cellSpreadsheet = ArrayList<List<Cell>>()
     private val cellReferenceMap = HashMap<String, Cell>()
 
-    fun main() {
-//        val csvFile = File("src/main/resources/simple_example.csv")
-        val csvFile = File("src/main/resources/example.csv")
-
+    fun main(csvFile: File) {
         populateSpreadsheetFromCsvFile(csvFile)
         calculateTotalsForAllCells()
         outputFormattedCellTotalsInCsvFormat()
@@ -39,20 +21,20 @@ class Spreadsheet {
     /* Iterate over all CSV cells and instantiate Cell objects
        Store these objects in the spreadsheet and reference map data structures */
     private fun populateSpreadsheetFromCsvFile(file: File) {
-        var currentRow = 1
+        var rowNumber = 1
         file.forEachLine { line ->
-            val cellTexts = line.split(",")
-            val spreadsheetRow = createSpreadsheetRow(currentRow, cellTexts)
-            cellSpreadsheet.add(spreadsheetRow)
-            currentRow++
+            val spreadsheetRow = createSpreadsheetRow(rowNumber, line)
+            this.cellSpreadsheet.add(spreadsheetRow)
+            rowNumber++
         }
     }
 
-    private fun createSpreadsheetRow(rowNumber: Int, cellTexts: List<String>): List<Cell> {
+    private fun createSpreadsheetRow(rowNumber: Int, line: String): List<Cell> {
+        val cellTexts = line.split(",")
         var columnLetter = 'A'
-        return cellTexts.map { cell ->
+        return cellTexts.map { cellText ->
             val cellReference = "$columnLetter$rowNumber"
-            val createdCell = createCell(cell, cellReference)
+            val createdCell = createCell(cellText, cellReference)
             columnLetter++
             createdCell
         }
@@ -66,7 +48,7 @@ class Spreadsheet {
 
     /* Iterate over each Cell and calculate the cell total */
     private fun calculateTotalsForAllCells() {
-        cellSpreadsheet.forEach { row ->
+        this.cellSpreadsheet.forEach { row ->
             row.forEach { cell ->
                 calculateCellTotal(cell)
             }
@@ -115,10 +97,10 @@ class Spreadsheet {
     }
 
     // If our term starts with a letter, it's a cell reference. This means we need to get the referenced cell
-    // and recursively calculate its total. Otherwise, we just have a number and can return it as a float
+    // and recursively calculate its total first. Otherwise, we just have a number and can return it as a float
     private fun calculateValueForTerm(term: String): Float {
         return if (term[0].isLetter()) {
-            val referencedCell = cellReferenceMap[term] ?: throw Exception("Invalid cell referenced")
+            val referencedCell = this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference")
             calculateCellTotal(referencedCell)
         } else {
             term.toFloat()
@@ -127,7 +109,7 @@ class Spreadsheet {
 
     /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
     private fun outputFormattedCellTotalsInCsvFormat() {
-        cellSpreadsheet.forEach { spreadsheetRow ->
+        this.cellSpreadsheet.forEach { spreadsheetRow ->
             val formattedCsvRowOutput = formatSpreadsheetRowForCsvOutput(spreadsheetRow)
             println(formattedCsvRowOutput)
         }
