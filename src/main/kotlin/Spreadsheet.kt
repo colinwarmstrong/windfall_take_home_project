@@ -29,40 +29,23 @@ class Spreadsheet {
     private val cellReferenceMap = HashMap<String, Cell>()
 
     fun main() {
-//        val file = File("src/main/resources/simple_example.csv")
-        val file = File("src/main/resources/example.csv")
+//        val csvFile = File("src/main/resources/simple_example.csv")
+        val csvFile = File("src/main/resources/example.csv")
 
-        createSpreadsheetFromCsvFile(file)
+        populateSpreadsheetFromCsvFile(csvFile)
         calculateTotalsForAllCells()
         outputFormattedCellTotalsInCsvFormat()
     }
 
     /* Iterate over all CSV cells and instantiate Cell objects
        Store these objects in the spreadsheet and reference map data structures */
-    private fun createSpreadsheetFromCsvFile(file: File) {
+    private fun populateSpreadsheetFromCsvFile(file: File) {
         var currentRow = 1
         file.forEachLine { line ->
             val cellTexts = line.split(",")
             val spreadsheetRow = createSpreadsheetRow(currentRow, cellTexts)
             cellSpreadsheet.add(spreadsheetRow)
             currentRow++
-        }
-    }
-
-    /* Iterate over each Cell and calculate the cell total */
-    private fun calculateTotalsForAllCells() {
-        cellSpreadsheet.forEach { row ->
-            row.forEach { cell ->
-                calculateCellTotal(cell)
-            }
-        }
-    }
-
-    /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
-    private fun outputFormattedCellTotalsInCsvFormat() {
-        cellSpreadsheet.forEach { row ->
-            val formattedCsvRowOutput = formatCsvRowForOutput(row)
-            println(formattedCsvRowOutput)
         }
     }
 
@@ -76,14 +59,19 @@ class Spreadsheet {
         }
     }
 
-    private fun formatCsvRowForOutput(row: List<Cell>): String {
-        return row.joinToString(",") { cell -> cell.getFormattedTotal() }
-    }
-
     private fun createCell(cellText: String, cellReference: String): Cell {
         val newCell = Cell(cellText)
         this.cellReferenceMap[cellReference] = newCell
         return newCell
+    }
+
+    /* Iterate over each Cell and calculate the cell total */
+    private fun calculateTotalsForAllCells() {
+        cellSpreadsheet.forEach { row ->
+            row.forEach { cell ->
+                calculateCellTotal(cell)
+            }
+        }
     }
 
     private fun calculateCellTotal(cell: Cell): Float {
@@ -126,5 +114,17 @@ class Spreadsheet {
 
         cell.setTotalHasBeenCalculatedToTrue()
         return cell.runningTotal
+    }
+
+    /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
+    private fun outputFormattedCellTotalsInCsvFormat() {
+        cellSpreadsheet.forEach { spreadsheetRow ->
+            val formattedCsvRowOutput = formatSpreadsheetRowForCsvOutput(spreadsheetRow)
+            println(formattedCsvRowOutput)
+        }
+    }
+
+    private fun formatSpreadsheetRowForCsvOutput(spreadsheetRow: List<Cell>): String {
+        return spreadsheetRow.joinToString(",") { cell -> cell.getFormattedTotal() }
     }
 }
