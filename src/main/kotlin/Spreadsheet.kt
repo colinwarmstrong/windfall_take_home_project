@@ -3,64 +3,70 @@ package colin.armstrong
 import java.io.File
 
 fun main() {
-    println("Windfall take home project in progress...\n")
     Spreadsheet().main()
-    println("\n")
-    println("Windfall take home project complete!")
 }
 
 class Cell(val text: String) {
-    var totalHasBeenCalculated: Boolean = false
     var runningTotal = 0.00f
+    var totalHasBeenCalculated: Boolean = false
 
     fun addValueToTotal(value: Float) {
         if (this.totalHasBeenCalculated) return
-        runningTotal += value
+        else runningTotal += value
     }
 
     fun getFormattedTotal(): String {
         return String.format("%.2f", runningTotal)
     }
 
-    fun confirmTotalHasBeenCalculated() {
+    fun setTotalHasBeenCalculatedToTrue() {
         this.totalHasBeenCalculated = true
     }
 }
 
 class Spreadsheet {
-
     private val cellSpreadsheet = ArrayList<List<Cell>>()
     private val cellReferenceMap = HashMap<String, Cell>()
 
     fun main() {
-        val file = File("src/main/resources/simple_example.csv")
-//        val file = File("src/main/resources/example.csv")
+//        val file = File("src/main/resources/simple_example.csv")
+        val file = File("src/main/resources/example.csv")
 
-        // Iterate over all CSV cells and Instantiate Cell objects
-        // Store these objects in the spreadsheet and reference map data structures
+        createSpreadsheetFromCsvFile(file)
+        calculateTotalsForAllCells()
+        outputFormattedCellTotalsInCsvFormat()
+    }
+
+    /* Iterate over all CSV cells and instantiate Cell objects
+       Store these objects in the spreadsheet and reference map data structures */
+    private fun createSpreadsheetFromCsvFile(file: File) {
         var currentRow = 1
         file.forEachLine { line ->
             val cellTexts = line.split(",")
-            val newCsvRow = createCsvRow(currentRow, cellTexts)
-            cellSpreadsheet.add(newCsvRow)
+            val spreadsheetRow = createSpreadsheetRow(currentRow, cellTexts)
+            cellSpreadsheet.add(spreadsheetRow)
             currentRow++
         }
+    }
 
-        // Iterate over each Cell and calculate the cell total
+    /* Iterate over each Cell and calculate the cell total */
+    private fun calculateTotalsForAllCells() {
         cellSpreadsheet.forEach { row ->
             row.forEach { cell ->
                 calculateCellTotal(cell)
             }
         }
+    }
 
-        // Iterate over each spreadsheet row and output formatted cell totals in CSV format
+    /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
+    private fun outputFormattedCellTotalsInCsvFormat() {
         cellSpreadsheet.forEach { row ->
             val formattedCsvRowOutput = formatCsvRowForOutput(row)
             println(formattedCsvRowOutput)
         }
     }
 
-    private fun createCsvRow(rowNumber: Int, cellTexts: List<String>): List<Cell> {
+    private fun createSpreadsheetRow(rowNumber: Int, cellTexts: List<String>): List<Cell> {
         var columnLetter = 'A'
         return cellTexts.map { cell ->
             val cellReference = "$columnLetter$rowNumber"
@@ -83,6 +89,8 @@ class Spreadsheet {
     private fun calculateCellTotal(cell: Cell): Float {
         val values = cell.text.split("+", "-").toMutableList()
 
+        /* Unless our cell text starts with a '-' character, add an implicit '+' character to
+           the start of our cell text to make conditional logic more straightforward */
         var normalizedCellText = cell.text
         if (cell.text[0] != '-') normalizedCellText = "+${cell.text}"
 
@@ -116,7 +124,7 @@ class Spreadsheet {
             i++
         }
 
-        cell.confirmTotalHasBeenCalculated()
+        cell.setTotalHasBeenCalculatedToTrue()
         return cell.runningTotal
     }
 }
