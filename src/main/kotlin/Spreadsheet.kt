@@ -4,6 +4,11 @@ import java.io.File
 
 fun main() {
     val pathname = "src/main/resources/example.csv"
+//    val pathname = "src/main/resources/floats.csv"
+//    val pathname = "src/main/resources/integers.csv"
+//    val pathname = "src/main/resources/integers_and_floats.csv"
+//    val pathname = "src/main/resources/direct_circular_reference.csv"
+//    val pathname = "src/main/resources/indirect_circular_reference.csv"
     val csvFile = File(pathname)
     Spreadsheet().main(csvFile)
 }
@@ -11,6 +16,7 @@ fun main() {
 class Spreadsheet {
     private val cellSpreadsheet = ArrayList<List<Cell>>()
     private val cellReferenceMap = HashMap<String, Cell>()
+    private val cellsCurrentlyBeingReferenced = HashSet<Cell>()
 
     fun main(csvFile: File) {
         populateSpreadsheetFromCsvFile(csvFile)
@@ -60,6 +66,13 @@ class Spreadsheet {
         // If we've already calculated this cell's total, just return the total
         if (cell.totalHasBeenCalculated) return cell.runningTotal
 
+        // Detect circular references using our HashSet to keep track of currently referenced cells
+        if (cellsCurrentlyBeingReferenced.contains(cell)) {
+            throw Exception("Circular reference detected, aborting process")
+        } else {
+            cellsCurrentlyBeingReferenced.add(cell)
+        }
+
         // Splitting our cell text on + and - operators gets us the terms we care about (numbers and cell references)
         val terms = cell.text.split("+", "-").toMutableList()
 
@@ -86,6 +99,9 @@ class Spreadsheet {
         // To avoid calculating a cell's total multiple times, set the 'hasBeenCalculated' boolean to true
         cell.setTotalHasBeenCalculatedToTrue()
 
+        // Remove cell from our set of currently referenced cells
+        cellsCurrentlyBeingReferenced.remove(cell)
+
         // Return the newly calculated running total for the cell
         return cell.runningTotal
     }
@@ -104,7 +120,8 @@ class Spreadsheet {
     // and recursively calculate its total first. Otherwise, we just have a number and can return it as a float
     private fun calculateValueForTerm(term: String): Float {
         return if (term[0].isLetter()) {
-            val referencedCell = this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference")
+            val referencedCell =
+                this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference $term, aborting process")
             calculateCellTotal(referencedCell)
         } else {
             term.toFloat()
