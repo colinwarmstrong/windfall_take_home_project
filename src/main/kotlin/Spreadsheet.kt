@@ -3,8 +3,8 @@ package colin.armstrong
 import java.io.File
 
 fun main() {
-    val filepath = "src/main/resources/example.csv"
-    val csvFile = File(filepath)
+    val pathname = "src/main/resources/example.csv"
+    val csvFile = File(pathname)
     Spreadsheet().main(csvFile)
 }
 
@@ -55,6 +55,7 @@ class Spreadsheet {
         }
     }
 
+    // Function containing the bulk of the calculation/recursion logic for this problem
     private fun calculateCellTotal(cell: Cell): Float {
         // If we've already calculated this cell's total, just return the total
         if (cell.totalHasBeenCalculated) return cell.runningTotal
@@ -64,17 +65,17 @@ class Spreadsheet {
 
         val normalizedCellText = getNormalizedCellText(cell.text)
 
-        // Iterate over each character in our normalized cell text and perform calculation logic when
-        // we reach a + or - operator
+        // Iterate over each character in our normalized cell text and perform calculation logic
         for (char in normalizedCellText) {
+            // We can simply skip to the next iteration when we're not at a +/- operator
             if (char != '+' && char != '-') continue
 
-            // Each time we reach a +/- operator, remove the first term from our list
+            // Each time we reach a +/- operator, remove the current term from our list
             val currentTerm = terms.removeFirst()
-            // Recursively calculate the value for this term
+            // Recursively calculate the value for the current term
             val termValue = calculateValueForTerm(currentTerm)
 
-            // Add or subtract term value to cell total based on +/- operator
+            // Add or subtract term value to the cell total based on + or - operator
             if (char == '+') {
                 cell.addValueToTotal(termValue)
             } else {
@@ -82,7 +83,10 @@ class Spreadsheet {
             }
         }
 
+        // To avoid calculating a cell's total multiple times, set the 'hasBeenCalculated' boolean to true
         cell.setTotalHasBeenCalculatedToTrue()
+
+        // Return the newly calculated running total for the cell
         return cell.runningTotal
     }
 
