@@ -28,7 +28,7 @@ class Spreadsheet {
     }
 
     /* Iterate over all CSV cells and instantiate Cell objects
-       Store these objects in the spreadsheet and reference map data structures */
+       Store these objects in the spreadsheet and cell reference map data structures */
     private fun populateSpreadsheetFromCsvFile(file: File) {
         var rowNumber = 1
         file.forEachLine { line ->
@@ -55,7 +55,7 @@ class Spreadsheet {
         return newCell
     }
 
-    // Iterate over each Cell and calculate the cell total
+    // Iterate over each Cell object and calculate its total
     private fun calculateTotalsForAllCells() {
         this.cellSpreadsheet.forEach { row ->
             row.forEach { cell ->
