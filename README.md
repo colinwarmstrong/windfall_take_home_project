@@ -10,6 +10,12 @@
 
 This program is written in Kotlin and runs via the JVM. It uses Gradle as a build tool. It was primarily written and run via the IntelliJ IDE during development.
 
+To download the code repository to your local machine via git, execute the following command in your terminal:
+
+```
+git clone https://github.com/colinwarmstrong/windfall_take_home_project.git
+```
+
 ### Selecting a CSV file as input for the program
 - In the `Spreadsheet.kt` class file, set the `pathname` string variable in the top level `main()` function to your desired CSV file path
 - I have included multiple example CSV files in the `src/main/resources` directory that you can use
