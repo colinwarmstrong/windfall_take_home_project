@@ -8,10 +8,10 @@ fun main() {
 //    val pathname = "src/main/resources/integers.csv"
 //    val pathname = "src/main/resources/integers_and_floats.csv"
 //    val pathname = "src/main/resources/27_columns.csv"
-//    val pathname = "src/main/resources/direct_circular_reference.csv"
-//    val pathname = "src/main/resources/indirect_circular_reference.csv"
-//    val pathname = "src/main/resources/invalid_cell_reference.csv"
-//    val pathname = "src/main/resources/empty_cell.csv"
+//    val pathname = "src/main/resources/direct_circular_reference_error.csv"
+//    val pathname = "src/main/resources/indirect_circular_reference_error.csv"
+//    val pathname = "src/main/resources/invalid_cell_reference_error.csv"
+//    val pathname = "src/main/resources/empty_cell_error.csv"
     val csvFile = File(pathname)
     Spreadsheet().main(csvFile)
 }
