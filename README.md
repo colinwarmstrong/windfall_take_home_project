@@ -15,7 +15,7 @@ This program is written in Kotlin and runs via the JVM. It uses Gradle as a buil
 - I have included multiple example CSV files in the `src/main/resources` directory that you can use
 - By default, the `pathname` variable is pointed at `base_example.csv`. There are multiple other lines in the top level `main()` function with CSV file paths that are commented out.  Feel free to comment/uncomment these lines to set the `pathname` variable to the other example CSVs
 
-### Running via IntelliJ (similar steps should work with other IDEs)
+### Running via IntelliJ (similar steps should work for other IDEs)
 - Open project in IntelliJ/other IDE
 - Navigate to the `src/main/kotlin/Spreadsheet.kt` file
 - Click the play button next to line 5 to run program or select run "Current File" from the run menu/dropdown
@@ -39,7 +39,7 @@ kotlinc src/main/kotlin -include-runtime -d spreadsheet.jar
 ```
 java -jar spreadsheet.jar
 ```
-- This will execute the program and output the calculated spreadsheet totals in CSV form to `stdout`
+- This will execute the program and output the calculated spreadsheet totals in CSV format to `stdout`
 - To compile and run the program using a single command, execute the following from the project's root directory:
 ```
 kotlinc src/main/kotlin -include-runtime -d spreadsheet.jar && java -jar spreadsheet.jar

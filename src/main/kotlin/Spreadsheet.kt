@@ -3,7 +3,7 @@ package colin.armstrong
 import java.io.File
 
 /* Program entry point. Set 'pathname' variable to your desired CSV file path and run the program
-   Results are written to stdout in CSV format */
+   Output is written to stdout in CSV format */
 fun main() {
     val pathname = "src/main/resources/base_example.csv"
 //    val pathname = "src/main/resources/floats.csv"
@@ -71,7 +71,7 @@ class Spreadsheet {
         // If we've already calculated this cell's total, just return the total
         if (cell.totalHasBeenCalculated) return cell.runningTotal
 
-        // Detect circular references using our HashSet to keep track of currently referenced cells
+        // Detect circular references using a HashSet that keeps track of currently referenced cells
         if (cellsCurrentlyBeingReferenced.contains(cell)) {
             throw Exception("Circular reference detected, aborting process")
         } else {
