@@ -55,7 +55,7 @@ class Spreadsheet {
         return newCell
     }
 
-    /* Iterate over each Cell and calculate the cell total */
+    // Iterate over each Cell and calculate the cell total
     private fun calculateTotalsForAllCells() {
         this.cellSpreadsheet.forEach { row ->
             row.forEach { cell ->
@@ -109,8 +109,8 @@ class Spreadsheet {
         return cell.runningTotal
     }
 
-    // Unless the cell text starts with a '-', add an implicit '+' to the front to make conditional
-    // logic more straightforward. Also includes an empty cell error check
+    /* Unless the cell text starts with a '-', add an implicit '+' to the front to make conditional
+       logic more straightforward. Also includes an empty cell error check */
     private fun getNormalizedCellText(cellText: String): String {
         if (cellText.isEmpty()) throw Exception("Empty cell detected, aborting process")
         return if (cellText[0] == '-') {
@@ -120,8 +120,8 @@ class Spreadsheet {
         }
     }
 
-    // If our term starts with a letter, it's a cell reference. This means we need to get the referenced cell
-    // and recursively calculate its total first. Otherwise, we just have a number and can return it as a float
+    /* If our term starts with a letter, it's a cell reference. This means we need to get the referenced cell
+       and recursively calculate its total first. Otherwise, we just have a number and can return it as a float */
     private fun calculateValueForTerm(term: String): Float {
         return if (term[0].isLetter()) {
             val referencedCell = this.cellReferenceMap[term]
@@ -132,7 +132,7 @@ class Spreadsheet {
         }
     }
 
-    /* Iterate over each spreadsheet row and output formatted cell totals in CSV format */
+    // Iterate over each spreadsheet row and output formatted cell totals in CSV format
     private fun outputFormattedCellTotalsInCsvFormat() {
         this.cellSpreadsheet.forEach { spreadsheetRow ->
             val formattedCsvRowOutput = formatSpreadsheetRowForCsvOutput(spreadsheetRow)
