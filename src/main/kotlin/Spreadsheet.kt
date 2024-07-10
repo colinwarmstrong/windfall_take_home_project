@@ -10,6 +10,7 @@ fun main() {
 //    val pathname = "src/main/resources/27_columns.csv"
 //    val pathname = "src/main/resources/direct_circular_reference.csv"
 //    val pathname = "src/main/resources/indirect_circular_reference.csv"
+//    val pathname = "src/main/resources/empty_cell.csv"
     val csvFile = File(pathname)
     Spreadsheet().main(csvFile)
 }
@@ -108,8 +109,9 @@ class Spreadsheet {
     }
 
     // Unless the cell text starts with a '-', add an implicit '+' to the front to make conditional
-    // logic more straightforward
+    // logic more straightforward. Also includes an empty cell error check
     private fun getNormalizedCellText(cellText: String): String {
+        if (cellText.isEmpty()) throw Exception("Empty cell detected, aborting process")
         return if (cellText[0] == '-') {
             cellText
         } else {
@@ -121,8 +123,7 @@ class Spreadsheet {
     // and recursively calculate its total first. Otherwise, we just have a number and can return it as a float
     private fun calculateValueForTerm(term: String): Float {
         return if (term[0].isLetter()) {
-            val referencedCell =
-                this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference $term, aborting process")
+            val referencedCell = this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference $term, aborting process")
             calculateCellTotal(referencedCell)
         } else {
             term.toFloat()
