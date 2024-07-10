@@ -12,8 +12,4 @@ class Cell(val text: String) {
     fun getFormattedTotal(): String {
         return String.format("%.2f", runningTotal)
     }
-
-    fun setTotalHasBeenCalculatedToTrue() {
-        this.totalHasBeenCalculated = true
-    }
 }

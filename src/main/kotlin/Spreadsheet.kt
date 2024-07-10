@@ -99,11 +99,11 @@ class Spreadsheet {
             }
         }
 
-        // To avoid calculating a cell's total multiple times, set the 'hasBeenCalculated' boolean to true
-        cell.setTotalHasBeenCalculatedToTrue()
-
         // Remove cell from our set of currently referenced cells
         cellsCurrentlyBeingReferenced.remove(cell)
+
+        // To avoid calculating a cell's total multiple times, set the 'totalHasBeenCalculated' boolean to true
+        cell.totalHasBeenCalculated = true
 
         // Return the newly calculated running total for the cell
         return cell.runningTotal
