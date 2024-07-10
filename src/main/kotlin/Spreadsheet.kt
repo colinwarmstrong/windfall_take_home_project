@@ -124,7 +124,8 @@ class Spreadsheet {
     // and recursively calculate its total first. Otherwise, we just have a number and can return it as a float
     private fun calculateValueForTerm(term: String): Float {
         return if (term[0].isLetter()) {
-            val referencedCell = this.cellReferenceMap[term] ?: throw Exception("Invalid cell reference $term, aborting process")
+            val referencedCell = this.cellReferenceMap[term]
+                ?: throw Exception("Invalid cell reference $term detected, aborting process")
             calculateCellTotal(referencedCell)
         } else {
             term.toFloat()
