@@ -24,7 +24,7 @@ git clone https://github.com/colinwarmstrong/windfall_take_home_project.git
 ### Running via IntelliJ (similar steps should work for other IDEs)
 - Open project in IntelliJ/other IDE
 - Navigate to the `src/main/kotlin/Spreadsheet.kt` file
-- Click the play button next to line 5 to run program or select run "Current File" from the run menu/dropdown
+- Click the play button next to the top level `main()` function to run the program or select run "Current File" from the run menu/dropdown
 - On Mac in IntelliJ, executing the ^R keyboard shortcut while in the `Spreadsheet.kt` file should also work
 
 ### Running via command line

@@ -9,6 +9,7 @@ fun main() {
 //    val pathname = "src/main/resources/floats.csv"
 //    val pathname = "src/main/resources/integers.csv"
 //    val pathname = "src/main/resources/integers_and_floats.csv"
+//    val pathname = "src/main/resources/cells_starting_with_minus_sign.csv"
 //    val pathname = "src/main/resources/twenty_seven_columns.csv"
 //    val pathname = "src/main/resources/direct_circular_reference_error.csv"
 //    val pathname = "src/main/resources/indirect_circular_reference_error.csv"
@@ -78,10 +79,13 @@ class Spreadsheet {
             cellsCurrentlyBeingReferenced.add(cell)
         }
 
-        // Splitting our cell text on + and - operators gets us the terms we care about (numbers and cell references)
-        val terms = cell.text.split("+", "-").toMutableList()
-
+        // Add + sign to front of strings unless they start with a -
         val normalizedCellText = getNormalizedCellText(cell.text)
+
+        // Splitting our cell text on + and - operators gets us the terms we care about (numbers and cell references)
+        val terms = normalizedCellText.split("+", "-").toMutableList()
+        // We end up with an empty string as our first term that we can simply ignore
+        terms.removeFirst()
 
         // Iterate over each character in our normalized cell text and perform calculation logic
         for (char in normalizedCellText) {
