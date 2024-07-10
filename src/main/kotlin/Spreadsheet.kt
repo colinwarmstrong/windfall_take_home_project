@@ -3,11 +3,11 @@ package colin.armstrong
 import java.io.File
 
 fun main() {
-    val pathname = "src/main/resources/example.csv"
+    val pathname = "src/main/resources/base_example.csv"
 //    val pathname = "src/main/resources/floats.csv"
 //    val pathname = "src/main/resources/integers.csv"
 //    val pathname = "src/main/resources/integers_and_floats.csv"
-//    val pathname = "src/main/resources/27_columns.csv"
+//    val pathname = "src/main/resources/twenty_seven_columns.csv"
 //    val pathname = "src/main/resources/direct_circular_reference_error.csv"
 //    val pathname = "src/main/resources/indirect_circular_reference_error.csv"
 //    val pathname = "src/main/resources/invalid_cell_reference_error.csv"
