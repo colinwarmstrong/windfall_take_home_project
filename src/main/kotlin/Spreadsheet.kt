@@ -10,6 +10,7 @@ fun main() {
 //    val pathname = "src/main/resources/27_columns.csv"
 //    val pathname = "src/main/resources/direct_circular_reference.csv"
 //    val pathname = "src/main/resources/indirect_circular_reference.csv"
+//    val pathname = "src/main/resources/invalid_cell_reference.csv"
 //    val pathname = "src/main/resources/empty_cell.csv"
     val csvFile = File(pathname)
     Spreadsheet().main(csvFile)
