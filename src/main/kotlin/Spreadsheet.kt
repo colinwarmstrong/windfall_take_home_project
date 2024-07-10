@@ -2,6 +2,8 @@ package colin.armstrong
 
 import java.io.File
 
+/* Program entry point. Set 'pathname' variable to your desired CSV file path and run the program
+   Results are written to stdout in CSV format */
 fun main() {
     val pathname = "src/main/resources/base_example.csv"
 //    val pathname = "src/main/resources/floats.csv"
