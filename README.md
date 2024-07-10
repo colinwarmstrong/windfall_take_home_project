@@ -1,6 +1,6 @@
 # Windfall Programming Assignment by Colin Armstrong
 
-## Technologies used
+## Technologies Used
 - Kotlin version 2.0.0
 - JVM version 21
 - Gradle version 8.5
