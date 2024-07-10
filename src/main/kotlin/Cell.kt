@@ -6,10 +6,10 @@ class Cell(val text: String) {
 
     fun addValueToTotal(value: Float) {
         if (this.totalHasBeenCalculated) return
-        runningTotal += value
+        this.runningTotal += value
     }
 
     fun getFormattedTotal(): String {
-        return String.format("%.2f", runningTotal)
+        return String.format("%.2f", this.runningTotal)
     }
 }
